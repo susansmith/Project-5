@@ -1,0 +1,49 @@
+html {
+	height: 100%;
+}
+
+body {
+	font-family: calibri, sans-serif;
+	font-size: 125%;
+	background-color: #CCFFFF;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+.header {
+	width: 100%;
+	background-color: #6699FF;
+	color: black;
+	font-size: 28px;
+	text-align: center;
+}
+
+.navbar {
+	width: 20%;
+	padding: 20px 20px 20px 20px;
+	float: left;
+	color: black;
+	font-weight: bold;
+}
+
+#map {
+	height: 100%;
+	width: 75%;
+	float: left;
+	margin: 20px 20px 20px 20px;
+}
+
+#searchbox {
+	height: 20px;
+	width: 200px;
+	font-size: 16px;
+	border-color: black;
+	border-width: 2px;
+	border-radius: 35px;
+	padding: 8px;
+}
+
+ul {
+	list-style-image: url('../img/beachball_small.png');
+}
