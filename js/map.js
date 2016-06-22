@@ -53,48 +53,47 @@ function initMap() {
     center: {lat: 32.0063231, lng: -80.8561358},
     zoom: 14
   });
-  createMarkers(map);
+  createMarkers(map, DataPoints);
 }; /* end of function initMap */
 
 
 /* function to create markers by cycling through the array */
-function createMarkers(chart) {
+function createMarkers(chart,stuff) {
     /* define a beach ball image to use for the map markers */
     var image = 'img/beachball_small.png';
 
     /* iterate through each data point to create a marker*/
-    for (var i = 0; i < DataPoints.length; i++) {
+    for (var i = 0; i < stuff.length; i++) {
       /* create marker */
        var marker = new google.maps.Marker({
-        position: {lat: DataPoints[i].lat, lng: DataPoints[i].lng},
+        position: {lat: stuff[i].lat, lng: stuff[i].lng},
         map: chart,
         icon: image,
         animation: google.maps.Animation.DROP,
-        title: DataPoints[i].name,
-        content: DataPoints[i].info
+        title: stuff[i].name,
+        content: stuff[i].info
       }); /* end of marker */
 
       /* push markers to array */ 
-      DataPoints[i].spot = marker;
-      console.log(DataPoints[i].spot); /* good! Marker is there */
+      stuff[i].spot = marker;
+      console.log(stuff[i].spot); /* good! Marker is there */
 
       /* get Foursquare data */
       /* Define Foursquare Developer client ID and Secret */
       var clientID = 'K15ISE4ANS2550SGMSHGZVDW2I2NECCD0MCCAXG353AMT1Z0';
       var clientSECRET = 'TQPJ21GUX3L0LUSL2SMPAHWHD32OITQ133U2UJJVN4KWGROI';
+      var FourURL;
       /* get Foursquare data via ajax call */
       $.ajax({
         type: 'GET',
         dataType: 'json',
         url: 'https://api.foursquare.com/v2/venues/search',
-        data: 'client_id='+clientID+'&client_secret='+clientSECRET+'&v=20130815&ll='+DataPoints[i].lat+','+DataPoints[i].lng+'&query='+DataPoints[i].name,
+        data: 'client_id='+clientID+'&client_secret='+clientSECRET+'&v=20130815&ll='+stuff[i].lat+','+stuff[i].lng+'&query='+stuff[i].name,
         async: true,
         success: function(info) {
-          this.url = info.response.venues[0].url;
-          console.log(this.url); /* good, url information is correct */
-          LocationList()[i].url = this.url;
-          /* error message 'cannot set property url of undefined' */
-          /* need to push to observable array here */
+          FourURL = info.response.venues[0].url;
+          console.log(FourURL); /* good, url information is correct */
+          return FourURL;
         },
         error: function(info) {
           alert('Foursquare data is not available');
@@ -110,8 +109,8 @@ function createMarkers(chart) {
 
       /* click listener to show info window */
       marker.addListener('click', function() {
-        window.setContent('<center><strong>'+this.title+'</strong><br>'+this.content+'<br>'+this.url+'</center>');
-        /* this.url is showing undefined */
+        window.setContent('<center><strong>'+this.title+'</strong><br>'+this.content+'<br>'+FourURL+'</center>');
+        /* FourURL is only the last one retrieved */
         window.open(map, this);
         });
 
@@ -140,9 +139,11 @@ var ViewModel = function() {
   /* iterate over initial array and create new place objects in the observable array */
   DataPoints.forEach(function(placeItem){
     LocationList.push (new MakePlace(placeItem));
+    createMarkers (map, LocationList);
   });
+
   console.log(LocationList()[0].info); /* good */
-  console.log(LocationList()[0].spot); /* undefined */
+  console.log(LocationList()[0].spot); /* function */
   console.log(LocationList()[0].url); /* function */
 
   this.currentPlace = ko.observable(LocationList()[0]);
