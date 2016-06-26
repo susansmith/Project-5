@@ -5,29 +5,28 @@
   </head>
 
   <body>
-
     <div class="header">
       Tybee Island Restaurants
     </div>
   
     <div class="navbar">
-
+      <form>
+        Search these locations:<br>
+        <input data-bind="textInput: searchString, event {keyup: searchy}"><br>
+      </form>
       <ul data-bind="foreach: LocationList">
-        <li data-bind="text: name, click: $parent.clicky"></li>
+        <li data-bind="text: name, click: $parent.clicky, visible: isSearchResult"></li>
       </ul>
     </div>
 
     <div id="map">
-    <script async
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB62E_nBUU7b9siCvP7noQgcFmBYwovQug
-        &libraries=visualization&callback=initMap">
-    </script>
+      <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB62E_nBUU7b9siCvP7noQgcFmBYwovQug&callback=initMap&onerror=googleError">
+      </script>
     </div>
 
     <script src="js/knockout-3.4.0.js"> </script>
     <script src="js/jquery-2.2.4.min.js"></script>
     <script src="js/map.js"> </script>
-
   </body>
 
 </html>
